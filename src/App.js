@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as cn from 'classnames';
+import * as cd from 'clone-deep';
 import './App.css';
 import backgroundImg from './assets/monks.jpg';
 
@@ -59,28 +60,26 @@ class App extends Component {
     //   }
     // }
 
-    for (let i = 1; i <= 16; i++) {
-      if (i < 16) {
+    for (let i = 0; i < 16; i++) {
+      if (i <= 15) {
         randomIntegers.push(i)
       } else {
         randomIntegers.push(0)
       }
     }
 
-    randomIntegers.forEach(num => {
-      const { row, column } = this.getPuzzleRowAndColumnByValue(num)
-      console.log(`for value: ${num} row: ${row} column: ${column}`)
-    })
+    const puzzles = randomIntegers.map((value, idx) => {
 
-    const puzzles = randomIntegers.map(value => {
-      const { row, column } = this.getPuzzleRowAndColumnByValue(value);
-      const { x, y } = this.getPuzzleBackgoundCoordinatesByPosition(row, column);
+      const [rowOnField, columnOnField] = this.getPuzzleRowAndColumnByNumber(idx);
+      const [xOnField, yOnField] = this.getPuzzleBackgoundCoordinatesByPosition(rowOnField, columnOnField);
+
+      const [rowOnBackground, columnOnBackground] = this.getPuzzleRowAndColumnByNumber(value);
+      const [backgroundX, backgroundY] = this.getPuzzleBackgoundCoordinatesByPosition(rowOnBackground, columnOnBackground);
       return {
-        row, column, value, x, y, backgroundX: x, backgroundY: y
+        row: rowOnField, column: columnOnField, value, x: xOnField, y: yOnField, backgroundX, backgroundY
       }
     })
 
-    console.log(puzzles);
     return puzzles
   }
 
@@ -91,31 +90,32 @@ class App extends Component {
   }
 
   onPuzzleClick = (clickedPuzzle) => {
-    console.log(`puzzle #${JSON.stringify(clickedPuzzle)} clicked`);
     const clickedPuzzleNeighborhoods = this.getAllNeighborhoods(clickedPuzzle);
     const clickablePuzzle = clickedPuzzleNeighborhoods.map(p => p.value).indexOf(0) > -1
-    console.log({ clickedPuzzleNeighborhoods, clickablePuzzle })
     if (clickablePuzzle) {
       const flatPuzzleValuesArray = this.state.puzzles.map(p => p.value);
+
       const clickedPuzzleIdx = flatPuzzleValuesArray.indexOf(clickedPuzzle.value);
       const emptyPuzzleIdx = flatPuzzleValuesArray.indexOf(0);
 
-      const puzzlesCopy = [...this.state.puzzles];
-      puzzlesCopy[emptyPuzzleIdx].value = clickedPuzzle.value;
-      puzzlesCopy[emptyPuzzleIdx].x = clickedPuzzle.x;
-      puzzlesCopy[emptyPuzzleIdx].y = clickedPuzzle.y;
+      const puzzlesCopy = cd(this.state.puzzles);
 
-      puzzlesCopy[clickedPuzzleIdx].value = 0;
-      puzzlesCopy[clickedPuzzleIdx].x = 0;  // find empty puzzle and set x and y from it
-      puzzlesCopy[clickedPuzzleIdx].y = 0;
+      const emptyPuzzle = cd(puzzlesCopy[emptyPuzzleIdx]);
+
+      puzzlesCopy[emptyPuzzleIdx].x = cd(clickedPuzzle).x;
+      puzzlesCopy[emptyPuzzleIdx].y = cd(clickedPuzzle).y;
+      puzzlesCopy[emptyPuzzleIdx].column = cd(clickedPuzzle).column;
+      puzzlesCopy[emptyPuzzleIdx].row = cd(clickedPuzzle).row;
+
+      puzzlesCopy[clickedPuzzleIdx].x = cd(emptyPuzzle).x;
+      puzzlesCopy[clickedPuzzleIdx].y = cd(emptyPuzzle).y;
+      puzzlesCopy[clickedPuzzleIdx].column = cd(emptyPuzzle).column;
+      puzzlesCopy[clickedPuzzleIdx].row = cd(emptyPuzzle).row;
 
       this.setState({
         puzzles: puzzlesCopy
       });
     }
-    // try to find empty puzzle around
-    // if found perform swap
-    // check if puzzle resolved
   }
 
   getAllNeighborhoods = (clickedPuzzle) => {
@@ -135,19 +135,19 @@ class App extends Component {
     return neighborhoods;
   }
 
-  getPuzzleRowAndColumnByValue(value) {
-    if (value === 0) return { row: this.state.puzzlesPerSide - 1, column: this.state.puzzlesPerSide - 1 }
+  getPuzzleRowAndColumnByNumber(value) {
+    if (value === 0) return [this.state.puzzlesPerSide - 1, this.state.puzzlesPerSide - 1]
 
     const row = Math.ceil(value / this.state.puzzlesPerSide) - 1
     const column = (value - 1) % 4;
-    return { row, column };
+    return [row, column];
   }
 
   getPuzzleBackgoundCoordinatesByPosition(row, column) {
     const { puzzleSideSize } = this.state;
     const x = column * puzzleSideSize;
     const y = row * puzzleSideSize
-    return { x, y }
+    return [x, y]
   }
 }
 
@@ -158,7 +158,6 @@ class Puzzle extends Component {
       'Puzzle': true,
       'Puzzle--empty': puzzle.value === 0
     });
-    console.log(backgroundImg)
     const cssStyles = {
       width: sideSize,
       height: sideSize,

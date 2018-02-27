@@ -25,16 +25,9 @@ class App extends Component {
   }
 
   render() {
-    const pazzleSolved = this.state.puzzles.map(p => p.value).every((value, idx, values) => {
-      const currentValue = value;
-      const nextValue = values[idx + 1];
-      if (typeof nextValue !== 'undefined' && nextValue === 0 && currentValue === values.length - 1) {
-        return true;
-      } else if (typeof nextValue === 'undefined' && currentValue === 0) {
-        return true;
-      } else {
-        return nextValue >= currentValue;
-      }
+    const pazzleSolved = this.state.puzzles.every((puzzle, idx, values) => {
+      const [puzzleShouldRow, puzzleShouldColumn] = this.getPuzzleRowAndColumnByNumber(idx);
+      return puzzle.row === puzzleShouldRow && puzzle.column === puzzleShouldColumn;
     })
     console.log({ pazzleSolved })
 

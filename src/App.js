@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import * as cn from 'classnames';
 import './App.css';
+import { height } from 'window-size';
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      puzzles: []
+      puzzles: [],
+      fieldSideSize: 500,
+      puzzlesPerSide: 4
     };
   }
 
@@ -18,23 +21,46 @@ class App extends Component {
   }
 
   render() {
-    const pazzleSolved = this.state.puzzles.every((puzzle, idx, puzzles) => puzzle.value <= puzzles[idx + 1])
-    console.log(pazzleSolved)
+    const pazzleSolved = this.state.puzzles.map(p => p.value).every((value, idx, values) => {
+      const currentValue = value;
+      const nextValue = values[idx + 1];
+      if (typeof nextValue !== 'undefined' && nextValue === 0 && currentValue === values.length - 1) {
+        return true;
+      } else if (typeof nextValue === 'undefined' && currentValue === 0) {
+        return true;
+      } else {
+        return nextValue >= currentValue;
+      }
+    })
+    console.log({ pazzleSolved })
+
+    const gameAreaStyles = {
+      width: `${this.state.fieldSideSize}px`,
+      height: `${this.state.fieldSideSize}px`
+    }
     return (
-      <div className="App">
+      <div className="App" style={gameAreaStyles} >
         {this.state.puzzles.map(p => (<Puzzle key={p.value} puzzle={p} onPuzzleClick={this.onPuzzleClick} />))}
-      </div>
+      </ div>
     );
   }
 
   initializePuzzles() {
     let randomIntegers = [];
-    while (randomIntegers.length < 16) {
-      const randomInt = this.getRandomIntInclusive(0, 15);
-      if (randomIntegers.indexOf(randomInt) > -1) {
-        continue;
+    // while (randomIntegers.length < 16) {
+    //   const randomInt = this.getRandomIntInclusive(0, 15);
+    //   if (randomIntegers.indexOf(randomInt) > -1) {
+    //     continue;
+    //   } else {
+    //     randomIntegers.push(randomInt);
+    //   }
+    // }
+
+    for (let i = 1; i <= 16; i++) {
+      if (i < 16) {
+        randomIntegers.push(i)
       } else {
-        randomIntegers.push(randomInt);
+        randomIntegers.push(0)
       }
     }
 
@@ -53,7 +79,7 @@ class App extends Component {
   getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
   }
 
   onPuzzleClick = (clickedPuzzle) => {

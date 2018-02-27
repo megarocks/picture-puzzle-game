@@ -4,13 +4,16 @@ import './App.css';
 import { height } from 'window-size';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
+    const { fieldSideSize, puzzlesPerSide } = this.props;
+    const puzzleSideSize = fieldSideSize / puzzlesPerSide;
     this.state = {
       puzzles: [],
-      fieldSideSize: 500,
-      puzzlesPerSide: 4
+      fieldSideSize,
+      puzzlesPerSide,
+      puzzleSideSize
     };
   }
 
@@ -64,14 +67,19 @@ class App extends Component {
       }
     }
 
-    const puzzles = [];
-    for (let row = 0; row < 4; row++) {
-      for (let column = 0; column < 4; column++) {
-        puzzles.push({
-          row, column, value: randomIntegers.shift()
-        })
+    randomIntegers.forEach(num => {
+      const { row, column } = this.getPuzzleRowAndColumnByValue(num)
+      console.log(`for value: ${num} row: ${row} column: ${column}`)
+    })
+
+    const puzzles = randomIntegers.map(value => {
+      const { row, column } = this.getPuzzleRowAndColumnByValue(value);
+      const { x, y } = this.getPuzzleBackgoundCoordinatesByPosition(row, column);
+      return {
+        row, column, value, x, y
       }
-    }
+    })
+
     console.log(puzzles);
     return puzzles
   }
@@ -119,6 +127,21 @@ class App extends Component {
       neighborhoods.push(this.state.puzzles.find(p => (p.column === clickedPuzzle.column + 1 && p.row === clickedPuzzle.row)));
     }
     return neighborhoods;
+  }
+
+  getPuzzleRowAndColumnByValue(value) {
+    if (value === 0) return { row: this.state.puzzlesPerSide - 1, column: this.state.puzzlesPerSide - 1 }
+
+    const row = Math.ceil(value / this.state.puzzlesPerSide) - 1
+    const column = (value - 1) % 4;
+    return { row, column };
+  }
+
+  getPuzzleBackgoundCoordinatesByPosition(row, column) {
+    const { puzzleSideSize } = this.state;
+    const x = column * puzzleSideSize;
+    const y = row * puzzleSideSize
+    return { x, y }
   }
 }
 

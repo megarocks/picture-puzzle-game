@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as cn from 'classnames';
 import './App.css';
-import { height } from 'window-size';
+import backgroundImg from './assets/monks.jpg';
 
 class App extends Component {
   constructor(props) {
@@ -43,7 +43,7 @@ class App extends Component {
     }
     return (
       <div className="App" style={gameAreaStyles} >
-        {this.state.puzzles.map(p => (<Puzzle key={p.value} puzzle={p} onPuzzleClick={this.onPuzzleClick} />))}
+        {this.state.puzzles.map(p => (<Puzzle key={p.value} puzzle={p} sideSize={this.state.puzzleSideSize} onPuzzleClick={this.onPuzzleClick} />))}
       </ div>
     );
   }
@@ -76,7 +76,7 @@ class App extends Component {
       const { row, column } = this.getPuzzleRowAndColumnByValue(value);
       const { x, y } = this.getPuzzleBackgoundCoordinatesByPosition(row, column);
       return {
-        row, column, value, x, y
+        row, column, value, x, y, backgroundX: x, backgroundY: y
       }
     })
 
@@ -147,13 +147,24 @@ class App extends Component {
 
 class Puzzle extends Component {
   render() {
-    const { puzzle } = this.props;
+    const { puzzle, sideSize } = this.props;
     const cssClasses = cn({
       'Puzzle': true,
       'Puzzle--empty': puzzle.value === 0
-    })
+    });
+    console.log(backgroundImg)
+    const cssStyles = {
+      width: sideSize,
+      height: sideSize,
+      position: 'absolute',
+      left: puzzle.x,
+      top: puzzle.y,
+      background: `url(${backgroundImg})`,
+      'backgroundPosition': `-${puzzle.backgroundX}px -${puzzle.backgroundY}px`
+    }
+
     return (
-      <div className={cssClasses} onClick={() => { this.props.onPuzzleClick(puzzle) }}>
+      <div className={cssClasses} onClick={() => { this.props.onPuzzleClick(puzzle) }} style={cssStyles}>
         {puzzle.value ? puzzle.value : null}
       </div>
     )

@@ -1,6 +1,4 @@
 .App {
-  text-align: center;
-  background-color: #e9e9e9;
   margin: 0 auto;
   position: relative;
 }
@@ -11,9 +9,4 @@
   justify-content: center;
   box-shadow: inset 0 0 0 1px white;
   transition: top 1s, left 1s;
-}
-
-
-.Puzzle--empty {
-  background: white;
 }

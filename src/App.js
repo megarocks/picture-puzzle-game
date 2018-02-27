@@ -102,7 +102,13 @@ class App extends Component {
 
       const puzzlesCopy = [...this.state.puzzles];
       puzzlesCopy[emptyPuzzleIdx].value = clickedPuzzle.value;
+      puzzlesCopy[emptyPuzzleIdx].x = clickedPuzzle.x;
+      puzzlesCopy[emptyPuzzleIdx].y = clickedPuzzle.y;
+
       puzzlesCopy[clickedPuzzleIdx].value = 0;
+      puzzlesCopy[clickedPuzzleIdx].x = 0;  // find empty puzzle and set x and y from it
+      puzzlesCopy[clickedPuzzleIdx].y = 0;
+
       this.setState({
         puzzles: puzzlesCopy
       });

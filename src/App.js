@@ -27,8 +27,9 @@ class App extends Component {
   render() {
     const pazzleSolved = this.state.puzzles.every((puzzle, idx, values) => {
       const [puzzleShouldRow, puzzleShouldColumn] = this.getPuzzleRowAndColumnByNumber(idx);
-      return puzzle.row === puzzleShouldRow && puzzle.column === puzzleShouldColumn;
+      return puzzle.fieldRow === puzzleShouldRow && puzzle.fieldColumn === puzzleShouldColumn;
     })
+    console.log(this.state.puzzles)
     console.log({ pazzleSolved })
 
     const gameAreaStyles = {
@@ -37,7 +38,9 @@ class App extends Component {
     }
     return (
       <div className="App" style={gameAreaStyles} >
-        {this.state.puzzles.map(p => (<Puzzle key={p.value} puzzle={p} sideSize={this.state.puzzleSideSize} onPuzzleClick={this.onPuzzleClick} />))}
+        {this.state.puzzles.map(p => (
+          <Puzzle key={p.value} puzzle={p} sideSize={this.state.puzzleSideSize} onPuzzleClick={this.onPuzzleClick} />
+        ))}
       </ div>
     );
   }
@@ -63,15 +66,16 @@ class App extends Component {
       }
     }
 
-    const puzzles = puzzleValues.map((value, idx) => {
+    const puzzles = puzzleValues.map((puzzleValue, puzzleIndex) => {
 
-      const [rowOnField, columnOnField] = this.getPuzzleRowAndColumnByNumber(idx);
-      const [xOnField, yOnField] = this.getPuzzleBackgoundCoordinatesByPosition(rowOnField, columnOnField);
+      const [fieldRow, fieldColumn] = this.getPuzzleRowAndColumnByNumber(puzzleIndex);
+      const [fieldX, fieldY] = this.getPuzzleBackgoundCoordinatesByPosition(fieldRow, fieldColumn);
 
-      const [rowOnBackground, columnOnBackground] = this.getPuzzleRowAndColumnByNumber(value);
-      const [backgroundX, backgroundY] = this.getPuzzleBackgoundCoordinatesByPosition(rowOnBackground, columnOnBackground);
+      const [backgroundRow, backgroundColumn] = this.getPuzzleRowAndColumnByNumber(puzzleValue);
+      const [backgroundX, backgroundY] = this.getPuzzleBackgoundCoordinatesByPosition(backgroundRow, backgroundColumn);
+
       return {
-        row: rowOnField, column: columnOnField, value, x: xOnField, y: yOnField, backgroundX, backgroundY
+        value: puzzleValue, fieldRow, fieldColumn, fieldX, fieldY, backgroundX, backgroundY
       }
     })
 
@@ -85,7 +89,7 @@ class App extends Component {
   }
 
   onPuzzleClick = (clickedPuzzle) => {
-    const clickedPuzzleNeighborhoods = this.getAllNeighborhoods(clickedPuzzle);
+    const clickedPuzzleNeighborhoods = this.getAllNeighborhoodsOf(clickedPuzzle);
     const clickablePuzzle = clickedPuzzleNeighborhoods.map(p => p.value).indexOf(0) > -1
     if (clickablePuzzle) {
       const flatPuzzleValuesArray = this.state.puzzles.map(p => p.value);
@@ -97,15 +101,15 @@ class App extends Component {
 
       const emptyPuzzle = cd(puzzlesCopy[emptyPuzzleIdx]);
 
-      puzzlesCopy[emptyPuzzleIdx].x = cd(clickedPuzzle).x;
-      puzzlesCopy[emptyPuzzleIdx].y = cd(clickedPuzzle).y;
-      puzzlesCopy[emptyPuzzleIdx].column = cd(clickedPuzzle).column;
-      puzzlesCopy[emptyPuzzleIdx].row = cd(clickedPuzzle).row;
+      puzzlesCopy[emptyPuzzleIdx].fieldX = cd(clickedPuzzle).fieldX;
+      puzzlesCopy[emptyPuzzleIdx].fieldY = cd(clickedPuzzle).fieldY;
+      puzzlesCopy[emptyPuzzleIdx].fieldColumn = cd(clickedPuzzle).fieldColumn;
+      puzzlesCopy[emptyPuzzleIdx].fieldRow = cd(clickedPuzzle).fieldRow;
 
-      puzzlesCopy[clickedPuzzleIdx].x = cd(emptyPuzzle).x;
-      puzzlesCopy[clickedPuzzleIdx].y = cd(emptyPuzzle).y;
-      puzzlesCopy[clickedPuzzleIdx].column = cd(emptyPuzzle).column;
-      puzzlesCopy[clickedPuzzleIdx].row = cd(emptyPuzzle).row;
+      puzzlesCopy[clickedPuzzleIdx].fieldX = cd(emptyPuzzle).fieldX;
+      puzzlesCopy[clickedPuzzleIdx].fieldY = cd(emptyPuzzle).fieldY;
+      puzzlesCopy[clickedPuzzleIdx].fieldColumn = cd(emptyPuzzle).fieldColumn;
+      puzzlesCopy[clickedPuzzleIdx].fieldRow = cd(emptyPuzzle).fieldRow;
 
       this.setState({
         puzzles: puzzlesCopy
@@ -113,20 +117,31 @@ class App extends Component {
     }
   }
 
-  getAllNeighborhoods = (clickedPuzzle) => {
+  getAllNeighborhoodsOf = (clickedPuzzle) => {
+    const { puzzles, puzzlesPerSide } = this.state;
+
     const neighborhoods = []
-    if (clickedPuzzle.row - 1 >= 0 && clickedPuzzle.row - 1 <= 3) {
-      neighborhoods.push(this.state.puzzles.find(p => (p.row === clickedPuzzle.row - 1 && p.column === clickedPuzzle.column)));
+
+    // puzzle below
+    if (clickedPuzzle.fieldRow - 1 >= 0 && clickedPuzzle.fieldRow - 1 <= puzzlesPerSide - 1) {
+      neighborhoods.push(puzzles.find(p => (p.fieldRow === clickedPuzzle.fieldRow - 1 && p.fieldColumn === clickedPuzzle.fieldColumn)));
     }
-    if (clickedPuzzle.row + 1 >= 0 && clickedPuzzle.row + 1 <= 3) {
-      neighborhoods.push(this.state.puzzles.find(p => (p.row === clickedPuzzle.row + 1 && p.column === clickedPuzzle.column)));
+
+    // puzzle above
+    if (clickedPuzzle.fieldRow + 1 >= 0 && clickedPuzzle.fieldRow + 1 <= puzzlesPerSide - 1) {
+      neighborhoods.push(puzzles.find(p => (p.fieldRow === clickedPuzzle.fieldRow + 1 && p.fieldColumn === clickedPuzzle.fieldColumn)));
     }
-    if (clickedPuzzle.column - 1 >= 0 && clickedPuzzle.column - 1 <= 3) {
-      neighborhoods.push(this.state.puzzles.find(p => (p.column === clickedPuzzle.column - 1 && p.row === clickedPuzzle.row)));
+
+    // puzzle to the left
+    if (clickedPuzzle.fieldColumn - 1 >= 0 && clickedPuzzle.fieldColumn - 1 <= puzzlesPerSide - 1) {
+      neighborhoods.push(puzzles.find(p => (p.fieldColumn === clickedPuzzle.fieldColumn - 1 && p.fieldRow === clickedPuzzle.fieldRow)));
     }
-    if (clickedPuzzle.column + 1 >= 0 && clickedPuzzle.column + 1 <= 3) {
-      neighborhoods.push(this.state.puzzles.find(p => (p.column === clickedPuzzle.column + 1 && p.row === clickedPuzzle.row)));
+
+    // puzzle to the right
+    if (clickedPuzzle.fieldColumn + 1 >= 0 && clickedPuzzle.fieldColumn + 1 <= puzzlesPerSide - 1) {
+      neighborhoods.push(puzzles.find(p => (p.fieldColumn === clickedPuzzle.fieldColumn + 1 && p.fieldRow === clickedPuzzle.fieldRow)));
     }
+
     return neighborhoods;
   }
 
@@ -134,7 +149,7 @@ class App extends Component {
     if (value === 0) return [this.state.puzzlesPerSide - 1, this.state.puzzlesPerSide - 1]
 
     const row = Math.ceil(value / this.state.puzzlesPerSide) - 1
-    const column = (value - 1) % 4;
+    const column = (value - 1) % this.state.puzzlesPerSide;
     return [row, column];
   }
 
@@ -156,15 +171,24 @@ class Puzzle extends Component {
     const cssStyles = {
       width: sideSize,
       height: sideSize,
+
       position: 'absolute',
-      left: puzzle.x,
-      top: puzzle.y,
-      background: `url(${backgroundImg})`,
-      'backgroundPosition': `-${puzzle.backgroundX}px -${puzzle.backgroundY}px`
+      left: puzzle.fieldX,
+      top: puzzle.fieldY,
+
+      boxShadow: 'inset 0 0 0 1px white'
+    }
+
+    if (puzzle.value) {
+      cssStyles.background = `url(${backgroundImg})`;
+      cssStyles.backgroundPosition = `-${puzzle.backgroundX}px -${puzzle.backgroundY}px`;
+    } else {
+      cssStyles.backgroundColor = 'transparent';
+      cssStyles.boxShadow = 'none';
     }
 
     return (
-      <div className={cssClasses} onClick={() => { this.props.onPuzzleClick(puzzle) }} style={cssStyles}>
+      <div className={cssClasses} style={cssStyles} onClick={() => { this.props.onPuzzleClick(puzzle) }} >
         {puzzle.value ? puzzle.value : null}
       </div>
     )

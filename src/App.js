@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import * as cn from 'classnames'
 import * as cd from 'clone-deep'
 
 import './App.css'
+import Puzzle from './Puzzle'
+
 import backgroundImg from './assets/monks.jpg'
 
 class App extends Component {
@@ -39,7 +40,7 @@ class App extends Component {
     return (
       <div className="App" style={gameFieldStyles} >
         {puzzles.map(puzzle => (
-          <Puzzle key={puzzle.value} puzzle={puzzle} onClick={this.onPuzzleClick} sideSize={puzzleSideSize} />
+          <Puzzle key={puzzle.value} puzzle={puzzle} onClick={this.onPuzzleClick} sideSize={puzzleSideSize} backgroundImg={backgroundImg} />
         ))}
       </ div>
     )
@@ -154,40 +155,6 @@ class App extends Component {
     const x = column * puzzleSideSize
     const y = row * puzzleSideSize
     return [x, y]
-  }
-}
-
-class Puzzle extends Component {
-  render() {
-    const { puzzle, sideSize } = this.props
-    const cssClasses = cn({
-      'Puzzle': true,
-      'Puzzle__empty': puzzle.value === 0
-    })
-    const cssStyles = {
-      width: sideSize,
-      height: sideSize,
-
-      position: 'absolute',
-      left: puzzle.fieldX,
-      top: puzzle.fieldY,
-
-      boxShadow: 'inset 0 0 0 1px white'
-    }
-
-    if (puzzle.value) {
-      cssStyles.background = `url(${backgroundImg})`
-      cssStyles.backgroundPosition = `-${puzzle.backgroundX}px -${puzzle.backgroundY}px`
-    } else {
-      cssStyles.backgroundColor = 'transparent'
-      cssStyles.boxShadow = 'none'
-    }
-
-    return (
-      <div className={cssClasses} style={cssStyles} onClick={() => { this.props.onClick(puzzle) }} >
-        {puzzle.value ? puzzle.value : null}
-      </div>
-    )
   }
 }
 

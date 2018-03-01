@@ -166,7 +166,7 @@ class Puzzle extends Component {
     const { puzzle, sideSize } = this.props;
     const cssClasses = cn({
       'Puzzle': true,
-      'Puzzle--empty': puzzle.value === 0
+      'Puzzle__empty': puzzle.value === 0
     });
     const cssStyles = {
       width: sideSize,

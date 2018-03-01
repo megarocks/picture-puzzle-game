@@ -20,7 +20,7 @@ class App extends Component {
 
   componentWillMount() {
     this.setState({
-      puzzles: this.initializePuzzles()
+      puzzles: this.initializePuzzles(true)
     })
   }
 
@@ -42,26 +42,28 @@ class App extends Component {
     );
   }
 
-  initializePuzzles() {
-    let randomIntegers = [];
-    // while (randomIntegers.length < 16) {
-    //   const randomInt = this.getRandomIntInclusive(0, 15);
-    //   if (randomIntegers.indexOf(randomInt) > -1) {
-    //     continue;
-    //   } else {
-    //     randomIntegers.push(randomInt);
-    //   }
-    // }
-
-    for (let i = 0; i < 16; i++) {
-      if (i <= 15) {
-        randomIntegers.push(i)
-      } else {
-        randomIntegers.push(0)
+  initializePuzzles(shouldBeRandom) {
+    let puzzleValues = [];
+    if (shouldBeRandom) {
+      while (puzzleValues.length < 16) {
+        const randomInt = this.getRandomIntInclusive(0, 15);
+        if (puzzleValues.indexOf(randomInt) > -1) {
+          continue;
+        } else {
+          puzzleValues.push(randomInt);
+        }
+      }
+    } else {
+      for (let i = 0; i < 16; i++) {
+        if (i <= 15) {
+          puzzleValues.push(i)
+        } else {
+          puzzleValues.push(0)
+        }
       }
     }
 
-    const puzzles = randomIntegers.map((value, idx) => {
+    const puzzles = puzzleValues.map((value, idx) => {
 
       const [rowOnField, columnOnField] = this.getPuzzleRowAndColumnByNumber(idx);
       const [xOnField, yOnField] = this.getPuzzleBackgoundCoordinatesByPosition(rowOnField, columnOnField);

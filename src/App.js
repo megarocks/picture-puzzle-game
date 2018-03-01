@@ -90,24 +90,22 @@ class App extends Component {
     const clickablePuzzle = clickedPuzzleNeighborhoods.map(p => p.value).indexOf(0) > -1
     if (!clickablePuzzle) { return }
 
+    const puzzlesCopy = cd(this.state.puzzles)
+    const flatPuzzleValuesArray = puzzlesCopy.map(p => p.value)
 
-    const flatPuzzleValuesArray = this.state.puzzles.map(p => p.value)
+    const emptyPuzzleIdx = flatPuzzleValuesArray.indexOf(0)
+    const emptyPuzzle = puzzlesCopy[emptyPuzzleIdx]
+    const emptyPuzzleCopy = cd(emptyPuzzle)
+    emptyPuzzle.fieldX = clickedPuzzle.fieldX
+    emptyPuzzle.fieldY = clickedPuzzle.fieldY
+    emptyPuzzle.fieldColumn = clickedPuzzle.fieldColumn
+    emptyPuzzle.fieldRow = clickedPuzzle.fieldRow
 
     const clickedPuzzleIdx = flatPuzzleValuesArray.indexOf(clickedPuzzle.value)
-    const emptyPuzzleIdx = flatPuzzleValuesArray.indexOf(0)
-
-    const puzzlesCopy = cd(this.state.puzzles)
-    const emptyPuzzleCopy = cd(puzzlesCopy[emptyPuzzleIdx])
-
-    puzzlesCopy[emptyPuzzleIdx].fieldX = clickedPuzzle.fieldX
-    puzzlesCopy[emptyPuzzleIdx].fieldY = clickedPuzzle.fieldY
-    puzzlesCopy[emptyPuzzleIdx].fieldColumn = clickedPuzzle.fieldColumn
-    puzzlesCopy[emptyPuzzleIdx].fieldRow = clickedPuzzle.fieldRow
-
-    puzzlesCopy[clickedPuzzleIdx].fieldX = cd(emptyPuzzleCopy).fieldX
-    puzzlesCopy[clickedPuzzleIdx].fieldY = cd(emptyPuzzleCopy).fieldY
-    puzzlesCopy[clickedPuzzleIdx].fieldColumn = cd(emptyPuzzleCopy).fieldColumn
-    puzzlesCopy[clickedPuzzleIdx].fieldRow = cd(emptyPuzzleCopy).fieldRow
+    puzzlesCopy[clickedPuzzleIdx].fieldX = emptyPuzzleCopy.fieldX
+    puzzlesCopy[clickedPuzzleIdx].fieldY = emptyPuzzleCopy.fieldY
+    puzzlesCopy[clickedPuzzleIdx].fieldColumn = emptyPuzzleCopy.fieldColumn
+    puzzlesCopy[clickedPuzzleIdx].fieldRow = emptyPuzzleCopy.fieldRow
 
     this.setState({
       puzzles: puzzlesCopy
@@ -143,10 +141,11 @@ class App extends Component {
   }
 
   getPuzzleRowAndColumnByNumber(value) {
-    if (value === 0) return [this.state.puzzlesPerSide - 1, this.state.puzzlesPerSide - 1]
+    const { puzzlesPerSide } = this.state;
+    if (value === 0) return [puzzlesPerSide - 1, puzzlesPerSide - 1]
 
-    const row = Math.ceil(value / this.state.puzzlesPerSide) - 1
-    const column = (value - 1) % this.state.puzzlesPerSide
+    const row = Math.ceil(value / puzzlesPerSide) - 1
+    const column = (value - 1) % puzzlesPerSide
     return [row, column]
   }
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import * as cn from 'classnames'
 
+import './Puzzle.css'
+
 const Puzzle = (props) => {
   {
     const { puzzle, sideSize, backgroundImg } = props

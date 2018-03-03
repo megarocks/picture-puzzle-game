@@ -7,7 +7,6 @@ export const getRandomIntInclusive = (min, max) => {
 }
 
 export const getPuzzles = ({ qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize, shouldBeRandom }) => {
-  console.log({ qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize, shouldBeRandom })
   let puzzleValues = []
   if (shouldBeRandom) {
     while (puzzleValues.length < qtyPuzzlesOnField) {
@@ -34,7 +33,6 @@ export const getPuzzles = ({ qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize, 
       value: puzzleValue, fieldRow, fieldColumn, fieldX, fieldY, backgroundX, backgroundY
     }
   })
-  console.log(puzzles)
   return puzzles
 }
 

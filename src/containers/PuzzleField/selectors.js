@@ -22,7 +22,7 @@ export const isPazzleSolvedSelector = createSelector(
   puzzlesPerSideSelector,
   puzzlesSelector,
   (puzzlesPerSide, puzzles) => puzzles.every((puzzle, puzzleIndex) => {
-    const [puzzleRowWhenSolved, puzzleColumnWhenSolved] = getPuzzleRowAndColumnByNumber(puzzlesPerSide, puzzleIndex)
+    const [puzzleRowWhenSolved, puzzleColumnWhenSolved] = getPuzzleRowAndColumnByNumber(puzzlesPerSide, puzzle.value)
     const isPuzzleAtCorrectPlace = puzzle.fieldRow === puzzleRowWhenSolved && puzzle.fieldColumn === puzzleColumnWhenSolved
     return isPuzzleAtCorrectPlace
   })

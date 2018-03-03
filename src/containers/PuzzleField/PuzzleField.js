@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import cn from 'classnames'
 
-import { getPuzzles } from './utils';
-
 import './PuzzleField.css'
 import Puzzle from './Puzzle'
 
@@ -23,12 +21,7 @@ import {
 class PuzzleField extends Component {
 
   componentWillMount() {
-    const { qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize } = this.props
-    const puzzles = getPuzzles({
-      qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize,
-      shouldBeRandom: false
-    })
-    this.props.startNewGame(puzzles)
+    this.props.startNewGame(true)
   }
 
   render() {
@@ -57,7 +50,7 @@ class PuzzleField extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     gameTurn: (clickedPuzzle) => dispatch(gameTurn(clickedPuzzle)),
-    startNewGame: (puzzles) => dispatch(startNewGame(puzzles))
+    startNewGame: (isRandom) => dispatch(startNewGame(isRandom))
   };
 }
 

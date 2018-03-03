@@ -7,9 +7,9 @@ export const gameTurn = (clickedPuzzle) => {
   }
 }
 
-export const startNewGame = (puzzles) => {
+export const startNewGame = (isRandom) => {
   return {
     type: actionTypes.START_NEW_GAME,
-    puzzles
+    isRandom
   }
 }

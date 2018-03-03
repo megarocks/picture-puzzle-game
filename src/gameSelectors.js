@@ -6,7 +6,6 @@ export const backgroundImgSelector = state => state.backgroundImg
 export const fieldSideSizeSelector = state => state.fieldSideSize
 export const puzzlesPerSideSelector = state => state.puzzlesPerSide
 export const puzzlesSelector = state => state.puzzles
-export const emptyPuzzleIndexSelector = state => state.puzzles.map(p => p.value).indexOf(0)
 
 export const qtyPuzzlesOnFieldSelector = createSelector(
   puzzlesPerSideSelector,
@@ -27,4 +26,9 @@ export const isPazzleSolvedSelector = createSelector(
     const puzzleAtCorrectPlace = puzzle.fieldRow === puzzleRowWhenSolved && puzzle.fieldColumn === puzzleColumnWhenSolved
     return puzzleAtCorrectPlace
   })
+)
+
+export const emptyPuzzleIndexSelector = createSelector(
+  puzzlesSelector,
+  (puzzles) => puzzles.map(p => p.value).indexOf(0)
 )

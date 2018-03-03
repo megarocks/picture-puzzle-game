@@ -3,7 +3,7 @@ import cn from 'classnames'
 
 import { connect } from 'react-redux'
 
-import { getPuzzles, getAllNeighborsOf, swapPuzzles, checkIfPuzzleClickable } from './gameUtils';
+import { getPuzzles, swapPuzzles, checkIfPuzzleClickable } from './gameUtils';
 
 import './PuzzleField.css'
 import Puzzle from './Puzzle'
@@ -34,7 +34,7 @@ class PuzzleField extends Component {
 
   render() {
     const { backgroundImg, fieldSideSize, puzzleSideSize, puzzles, isPuzzleSolved } = this.props;
-    console.log({isPuzzleSolved})
+
     const gameFieldStyles = {
       width: `${fieldSideSize}px`,
       height: `${fieldSideSize}px`,

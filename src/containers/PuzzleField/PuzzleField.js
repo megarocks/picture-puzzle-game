@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import cn from 'classnames'
 
-import { getPuzzles, swapPuzzles, checkIfPuzzleClickable } from './utils';
+import { getPuzzles } from './utils';
 
 import './PuzzleField.css'
 import Puzzle from './Puzzle'
@@ -32,7 +32,7 @@ class PuzzleField extends Component {
   }
 
   render() {
-    const { backgroundImg, fieldSideSize, puzzleSideSize, puzzles, isPuzzleSolved } = this.props;
+    const { backgroundImg, fieldSideSize, puzzleSideSize, puzzles, isPuzzleSolved, gameTurn } = this.props;
 
     const gameFieldStyles = {
       width: `${fieldSideSize}px`,
@@ -47,27 +47,16 @@ class PuzzleField extends Component {
     return (
       <div className={cssClases} style={gameFieldStyles} >
         {puzzles.map(puzzle => (
-          <Puzzle key={puzzle.value} puzzle={puzzle} onClick={this.onPuzzleClick} sideSize={puzzleSideSize} backgroundImg={backgroundImg} />
+          <Puzzle key={puzzle.value} puzzle={puzzle} onClick={gameTurn} sideSize={puzzleSideSize} backgroundImg={backgroundImg} />
         ))}
       </ div>
     )
-  }
-
-  onPuzzleClick = (clickedPuzzle) => {
-    const { puzzles, puzzlesPerSide, emptyPuzzleIdx, gameTurn } = this.props
-
-    const isClickablePuzzle = checkIfPuzzleClickable(clickedPuzzle, puzzles, puzzlesPerSide)
-    if (!isClickablePuzzle) { return }
-
-    const clickedPuzzleIdx = puzzles.map(p => p.value).indexOf(clickedPuzzle.value)
-    const puzzlesAfterSwap = swapPuzzles(puzzles, emptyPuzzleIdx, clickedPuzzleIdx)
-    gameTurn(puzzlesAfterSwap);
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    gameTurn: (puzzles) => dispatch(gameTurn(puzzles)),
+    gameTurn: (clickedPuzzle) => dispatch(gameTurn(clickedPuzzle)),
     startNewGame: (puzzles) => dispatch(startNewGame(puzzles))
   };
 }

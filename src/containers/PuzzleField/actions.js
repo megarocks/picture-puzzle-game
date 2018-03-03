@@ -1,9 +1,9 @@
 import * as actionTypes from './actionTypes'
 
-export const gameTurn = (puzzles) => {
+export const gameTurn = (clickedPuzzle) => {
   return {
     type: actionTypes.GAME_TURN,
-    puzzles
+    clickedPuzzle
   }
 }
 

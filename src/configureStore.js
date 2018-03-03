@@ -1,14 +1,14 @@
 import {
   createStore,
   applyMiddleware
-} from 'redux';
+} from 'redux'
 import logger from 'redux-logger'
 
-import gameStateReducer from './gameStateReducer'
+import { reducer as gameStateReducer } from './containers/PuzzleField'
 
 export default function configureStore(initialState) {
 
-  const middlewares = [];
+  const middlewares = []
 
   if (process.env.NODE_ENV === 'development') { middlewares.push(logger) }
 
@@ -18,5 +18,5 @@ export default function configureStore(initialState) {
     applyMiddleware(...middlewares)
   )
 
-  return store;
+  return store
 }

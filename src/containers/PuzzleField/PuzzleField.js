@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import cn from 'classnames'
 
-import { connect } from 'react-redux'
-
-import { getPuzzles, swapPuzzles, checkIfPuzzleClickable } from './gameUtils';
+import { getPuzzles, swapPuzzles, checkIfPuzzleClickable } from './utils';
 
 import './PuzzleField.css'
 import Puzzle from './Puzzle'
 
-import { startNewGame, gameTurn } from './gameActions'
+import { startNewGame, gameTurn } from './actions'
 
 import {
   backgroundImgSelector,
@@ -19,7 +18,7 @@ import {
   qtyPuzzlesOnFieldSelector,
   isPazzleSolvedSelector,
   emptyPuzzleIndexSelector
- } from './gameSelectors'
+ } from './selectors'
 
 class PuzzleField extends Component {
 

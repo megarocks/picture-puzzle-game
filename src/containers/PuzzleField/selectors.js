@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { getPuzzleRowAndColumnByNumber } from './gameUtils'
+import { getPuzzleRowAndColumnByNumber } from './utils'
 
 export const backgroundImgSelector = state => state.backgroundImg
 export const fieldSideSizeSelector = state => state.fieldSideSize
@@ -23,8 +23,8 @@ export const isPazzleSolvedSelector = createSelector(
   puzzlesSelector,
   (puzzlesPerSide, puzzles) => puzzles.every((puzzle, puzzleIndex) => {
     const [puzzleRowWhenSolved, puzzleColumnWhenSolved] = getPuzzleRowAndColumnByNumber(puzzlesPerSide, puzzleIndex)
-    const puzzleAtCorrectPlace = puzzle.fieldRow === puzzleRowWhenSolved && puzzle.fieldColumn === puzzleColumnWhenSolved
-    return puzzleAtCorrectPlace
+    const isPuzzleAtCorrectPlace = puzzle.fieldRow === puzzleRowWhenSolved && puzzle.fieldColumn === puzzleColumnWhenSolved
+    return isPuzzleAtCorrectPlace
   })
 )
 

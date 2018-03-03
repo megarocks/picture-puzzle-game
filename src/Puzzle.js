@@ -8,7 +8,7 @@ const Puzzle = (props) => {
     const { puzzle, sideSize, backgroundImg } = props
     const cssClasses = cn({
       'Puzzle': true,
-      'Puzzle__empty': puzzle.value === 0
+      'Puzzle--empty': puzzle.value === 0
     })
     const cssStyles = {
       width: sideSize,
@@ -37,4 +37,4 @@ const Puzzle = (props) => {
   }
 }
 
-export default Puzzle 
+export default Puzzle

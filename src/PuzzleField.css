@@ -1,0 +1,8 @@
+.PuzzleField {
+  border: 1px solid;
+  border-color: #333333;
+}
+
+.PuzzleField--solved {
+  border-color: #47ac6a;
+}

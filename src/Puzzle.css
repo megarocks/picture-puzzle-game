@@ -8,6 +8,6 @@
     box-sizing: border-box;
 }
 
-.Puzzle__empty {
+.Puzzle--empty {
     transition: none;
 }

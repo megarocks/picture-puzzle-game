@@ -77,7 +77,7 @@ export const getAllNeighborsOf = (clickedPuzzle, puzzles, puzzlesPerSide) => {
   return neighbors
 }
 
-export const swapPuzzles = (puzzles, emptyPuzzleIdx, clickedPuzzleIdx) => {
+export const swapPuzzles = (emptyPuzzleIdx, clickedPuzzleIdx, puzzles) => {
   const swapedPuzzles = cd(puzzles)
 
   const clickedPuzzle = swapedPuzzles[clickedPuzzleIdx]
@@ -97,7 +97,7 @@ export const swapPuzzles = (puzzles, emptyPuzzleIdx, clickedPuzzleIdx) => {
   return swapedPuzzles;
 }
 
-export const checkIfPuzzleClickable = (clickedPuzzle, puzzles, puzzlesPerSide) => {
+export const checkIfPuzzleClickable = (clickedPuzzle, puzzlesPerSide, puzzles) => {
   const clickedPuzzleNeighbors = getAllNeighborsOf(clickedPuzzle, puzzles, puzzlesPerSide)
   const isClickablePuzzle = clickedPuzzleNeighbors.map(p => p.value).indexOf(0) > -1
   return isClickablePuzzle;

@@ -21,11 +21,11 @@ export default function (state = {}, action) {
       const { puzzles, puzzlesPerSide } = state
       const emptyPuzzleIdx = emptyPuzzleIndexSelector(state);
 
-      const isClickablePuzzle = checkIfPuzzleClickable(clickedPuzzle, puzzles, puzzlesPerSide)
+      const isClickablePuzzle = checkIfPuzzleClickable(clickedPuzzle, puzzlesPerSide,puzzles)
       if (!isClickablePuzzle) { return state }
 
       const clickedPuzzleIdx = puzzles.map(p => p.value).indexOf(clickedPuzzle.value)
-      const puzzlesAfterSwap = swapPuzzles(puzzles, emptyPuzzleIdx, clickedPuzzleIdx)
+      const puzzlesAfterSwap = swapPuzzles(emptyPuzzleIdx, clickedPuzzleIdx, puzzles)
 
       return {
         ...state,

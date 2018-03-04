@@ -6,8 +6,13 @@ import {
   checkIfPuzzleClickable
 } from './utils'
 
-
-import { emptyPuzzleIndexSelector, qtyPuzzlesOnFieldSelector, puzzleSideSizeSelector, puzzlesPerSideSelector, puzzlesSelector } from './selectors'
+import {
+  emptyPuzzleIndexSelector,
+  qtyPuzzlesOnFieldSelector,
+  puzzleSideSizeSelector,
+  puzzlesPerSideSelector,
+  puzzlesSelector
+} from './selectors'
 
 export default function (state = {}, action) {
   const qtyPuzzlesOnField = qtyPuzzlesOnFieldSelector(state)
@@ -18,14 +23,14 @@ export default function (state = {}, action) {
   switch (action.type) {
 
     case actionTypes.START_NEW_GAME:
-      const generatedPuzzles = getPuzzles({ shouldBeRandom: action.isRandom, qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize});
+      const generatedPuzzles = getPuzzles({ shouldBeRandom: action.isRandom, qtyPuzzlesOnField, puzzlesPerSide, puzzleSideSize });
       return state.set('puzzles', generatedPuzzles);
 
     case actionTypes.GAME_TURN:
       const { clickedPuzzle } = action
       const emptyPuzzleIdx = emptyPuzzleIndexSelector(state);
 
-      const isClickablePuzzle = checkIfPuzzleClickable(clickedPuzzle, puzzlesPerSide,puzzles)
+      const isClickablePuzzle = checkIfPuzzleClickable(clickedPuzzle, puzzlesPerSide, puzzles)
       if (!isClickablePuzzle) { return state }
 
       const clickedPuzzleIdx = puzzles.map(p => p.value).indexOf(clickedPuzzle.value)

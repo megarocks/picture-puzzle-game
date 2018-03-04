@@ -17,6 +17,14 @@ import {
   emptyPuzzleIndexSelector
  } from './selectors'
 
+const StyledPuzzleField = styled.div`
+  width: ${props => props.fieldSideSize}px;
+  height: ${props => props.fieldSideSize}px;
+  position: relative;
+  box-shadow: 0px 0px 3px 3px ${props => props.isPuzzleSolved ? '#47ac6a' : '#333333'};
+  transition: box-shadow 1s;
+`
+
 class PuzzleField extends Component {
 
   componentWillMount() {
@@ -26,17 +34,8 @@ class PuzzleField extends Component {
   render() {
     const { backgroundImg, fieldSideSize, puzzleSideSize, puzzles, isPuzzleSolved, gameTurn } = this.props;
 
-    const StyledPuzzleField = styled.div`
-      width: ${fieldSideSize}px;
-      height: ${fieldSideSize}px;
-      position: relative;
-      box-shadow: 0px 0px 3px 3px ${props => props.isPuzzleSolved ? '#47ac6a' : '#333333'};
-      transition: box-shadow 1s;
-    `
-
-    console.log(StyledPuzzleField)
     return (
-      <StyledPuzzleField isPuzzleSolved>
+      <StyledPuzzleField fieldSideSize={fieldSideSize} isPuzzleSolved={isPuzzleSolved}>
         {puzzles.map(puzzle => (
           <Puzzle key={puzzle.value} puzzle={puzzle} onClick={gameTurn} sideSize={puzzleSideSize} backgroundImg={backgroundImg} />
         ))}

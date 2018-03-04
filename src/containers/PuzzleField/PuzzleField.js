@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import cn from 'classnames'
+import styled from "styled-components";
 
-import './PuzzleField.css'
 import Puzzle from './Puzzle'
 
 import { startNewGame, gameTurn } from './actions'
@@ -27,22 +26,21 @@ class PuzzleField extends Component {
   render() {
     const { backgroundImg, fieldSideSize, puzzleSideSize, puzzles, isPuzzleSolved, gameTurn } = this.props;
 
-    const gameFieldStyles = {
-      width: `${fieldSideSize}px`,
-      height: `${fieldSideSize}px`,
-      position: 'relative'
-    }
+    const StyledPuzzleField = styled.div`
+      width: ${fieldSideSize}px;
+      height: ${fieldSideSize}px;
+      position: relative;
+      box-shadow: 0px 0px 3px 3px ${props => props.isPuzzleSolved ? '#47ac6a' : '#333333'};
+      transition: box-shadow 1s;
+    `
 
-    const cssClases = cn({
-      'PuzzleField': true,
-      'PuzzleField--solved': isPuzzleSolved
-    })
+    console.log(StyledPuzzleField)
     return (
-      <div className={cssClases} style={gameFieldStyles} >
+      <StyledPuzzleField isPuzzleSolved>
         {puzzles.map(puzzle => (
           <Puzzle key={puzzle.value} puzzle={puzzle} onClick={gameTurn} sideSize={puzzleSideSize} backgroundImg={backgroundImg} />
         ))}
-      </ div>
+      </StyledPuzzleField>
     )
   }
 }

@@ -7,7 +7,7 @@ import {
 } from './utils'
 
 
-import { emptyPuzzleIndexSelector, qtyPuzzlesOnFieldSelector, puzzleSideSizeSelector, puzzlesPerSideSelector, puzzles, puzzlesSelector } from './selectors'
+import { emptyPuzzleIndexSelector, qtyPuzzlesOnFieldSelector, puzzleSideSizeSelector, puzzlesPerSideSelector, puzzlesSelector } from './selectors'
 
 export default function (state = {}, action) {
   const qtyPuzzlesOnField = qtyPuzzlesOnFieldSelector(state)

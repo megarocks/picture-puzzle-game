@@ -3,10 +3,11 @@ import {
   applyMiddleware
 } from 'redux'
 import logger from 'redux-logger'
+import { fromJS } from 'immutable';
 
 import { reducer as gameStateReducer } from './containers/PuzzleField'
 
-export default function configureStore(initialState) {
+export default function configureStore(initialState = {}) {
 
   const middlewares = []
 
@@ -14,7 +15,7 @@ export default function configureStore(initialState) {
 
   const store = createStore(
     gameStateReducer,
-    initialState,
+    fromJS(initialState),
     applyMiddleware(...middlewares)
   )
 

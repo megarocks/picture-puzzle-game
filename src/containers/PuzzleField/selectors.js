@@ -2,10 +2,10 @@ import { createSelector } from 'reselect'
 
 import { getPuzzleRowAndColumnByNumber } from './utils'
 
-export const backgroundImgSelector = state => state.backgroundImg
-export const fieldSideSizeSelector = state => state.fieldSideSize
-export const puzzlesPerSideSelector = state => state.puzzlesPerSide
-export const puzzlesSelector = state => state.puzzles
+export const backgroundImgSelector = state => state.get('backgroundImg')
+export const fieldSideSizeSelector = state => state.get('fieldSideSize')
+export const puzzlesPerSideSelector = state => state.get('puzzlesPerSide')
+export const puzzlesSelector = state => state.get('puzzles')
 
 export const qtyPuzzlesOnFieldSelector = createSelector(
   puzzlesPerSideSelector,
